@@ -2,64 +2,36 @@
 import React from 'react'
 import { View, SafeAreaView, Text, FlatList, ImageBackground } from 'react-native'
 import { Feather } from "@expo/vector-icons"
-const Update = (props) => {
+import { weatherType } from './components/weatherType'
+import moment from 'moment'
+const Update = ({weatherData}) => {
 
 
-
-  const Data = [
-    {
-      "dt": 1701464400,
-      "main": {
-        "temp_min": 274.05,
-        "temp_max": 274.34,
-      },
-      "weather": [{
-        "main": "Clouds"
-      }]
-    },
-    {
-      "dt": 1701475200,
-      "main": {
-        "temp_min": 273.76,
-        "temp_max": 273.81,
-      },
-      "weather": [{
-        "main": "Clouds",
-      }]
-    },
-    {
-      "dt": 1701486000,
-      "main": {
-        "temp_min": 273.41,
-        "temp_max": 273.41,
-      },
-      "weather": [{
-        "main": "Clouds",
-      }]
-    }
-  ]
-
-  const Item = (props) => {
-    const { dt, min, max, condition } = props
+  const Item = (weatherData) => {
+    const { dt_text, min, max, condition } = weatherData
     return (
       <View className = ' border-4 border-black shadow-white shadow-md mt-2 rounded-md flex flex-row justify-around p-2 '>
-        <Feather name='sun' size={50} color={'white'} />
-        <Text className=' text-white text-xl '>{dt}</Text>
-        <Text className=' text-white text-xl '>{min}</Text>
-        <Text className=' text-white text-xl '>{max}</Text>
-        <Text className=' text-white text-xl '>{condition}</Text>
+
+        <Feather name={weatherType[condition].icon} size={50} color={'white'} />
+        <View className=' flex flex-col'>
+        <Text className=' text-white text-xl '>{moment(dt_text).format('dddd')}</Text>
+        <Text className=' text-white text-xl '>{moment(dt_text).format('h:mm:ss a')}</Text>
+        </View>
+        
+        <Text className=' text-white text-xl '>{`${Math.round(min)}`}</Text>
+        <Text className=' text-white text-xl '>{`${Math.round(max)}`}</Text>
       </View>
     )
   }
 
   const renderItem = ({ item }) => (
-    <Item dt={item.dt} min={item.main.temp_min} max={item.main.temp_max} condition={item.weather[0].main}  ></Item>
+    <Item dt_txt={item.dt_txt} min={item.main.temp_min} max={item.main.temp_max} condition={item.weather[0].main}  ></Item>
   )
   return (
     <SafeAreaView className = ' bg-slate-900 flex-1'>
       <ImageBackground source={require('../assets/clouds.jpg')} className = ' flex-1'>
       <FlatList
-        data={Data}
+        data={weatherData}
         renderItem={renderItem}
         keyExtractor={(item)=>{item.dt}}
       ></FlatList>
